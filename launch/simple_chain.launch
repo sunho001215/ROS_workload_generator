@@ -1,0 +1,30 @@
+<launch>
+    <node pkg="ros_workload_generator" type="entry_node" name="node1" output="screen">
+        <rosparam param="child_idx">[2, 3]</rosparam>
+        <param name="default_waste_time" value="50" />
+        <param name="period" value="100" />
+    </node>
+
+    <node pkg="ros_workload_generator" type="middle_node" name="node2" output="screen">
+        <rosparam param="parent_idx">[1]</rosparam>
+        <rosparam param="child_idx">[4]</rosparam>
+        <param name="default_waste_time" value="15" />
+        <param name="callback_waste_time" value="60" />
+        <param name="period" value="100" />
+    </node>
+
+    <node pkg="ros_workload_generator" type="middle_node" name="node3" output="screen">
+        <rosparam param="parent_idx">[1]</rosparam>
+        <rosparam param="child_idx">[4]</rosparam>
+        <param name="default_waste_time" value="10" />
+        <param name="callback_waste_time" value="40" />
+        <param name="period" value="100" />
+    </node>
+
+    <node pkg="ros_workload_generator" type="leaf_node" name="node4" output="screen">
+        <rosparam param="parent_idx">[2, 3]</rosparam>
+        <param name="default_waste_time" value="3" />
+        <param name="callback_waste_time" value="50" />
+        <param name="period" value="100" />
+    </node>
+</launch>
