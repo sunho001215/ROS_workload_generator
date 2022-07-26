@@ -1,7 +1,7 @@
 <launch>
     <node pkg="ros_workload_generator" type="entry_node" name="node1" output="screen">
         <rosparam param="child_idx">[2, 3]</rosparam>
-        <param name="default_waste_time" value="50" />
+        <param name="default_waste_time" value="10" />
         <param name="period" value="100" />
     </node>
 

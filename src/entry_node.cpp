@@ -1,6 +1,12 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "ros/this_node.h"
+#include <ros/package.h>
+
+#include <sstream>
+#include <vector>
+#include <string>
+#include <time.h>
 
 #define MAGIC_NUMBER 497000
 
@@ -47,6 +53,16 @@ void publish_message(){
 }
 
 void default_waste_time(){
+    struct timespec start_time;
+    clock_gettime(CLOCK_MONOTONIC, &start_time);
+
+    std::string pack_path = ros::package::getPath("ros_workload_generator");
+    std::string file_name = pack_path + "/entry_node.res";
+    
+    FILE *fp = fopen(file_name.c_str(), "a");
+    fprintf(fp, "%d %ld.%.9ld\n", publish_topic_count_, start_time.tv_sec, start_time.tv_nsec);
+    fclose(fp);
+
     float tmp = 3.323;
     for(long long int i = 0; i < MAGIC_NUMBER * default_waste_time_; i++){
         tmp = 1 - tmp;

@@ -1,6 +1,12 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "ros/this_node.h"
+#include <ros/package.h>
+
+#include <sstream>
+#include <vector>
+#include <string>
+#include <time.h>
 
 #define MAGIC_NUMBER 497000
 

@@ -1,6 +1,12 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "ros/this_node.h"
+#include <ros/package.h>
+
+#include <sstream>
+#include <vector>
+#include <string>
+#include <time.h>
 
 #define MAGIC_NUMBER 497000
 
@@ -45,6 +51,16 @@ void callback_waste_time(){
     for(long long int i = 0; i < MAGIC_NUMBER * callback_waste_time_; i++){
         tmp = 1 - tmp;
     }
+
+    struct timespec end_time;
+    clock_gettime(CLOCK_MONOTONIC, &end_time);
+
+    std::string pack_path = ros::package::getPath("ros_workload_generator");
+    std::string file_name = pack_path + "/leaf_node.res";
+    
+    FILE *fp = fopen(file_name.c_str(), "a");
+    fprintf(fp, "%d %ld.%.9ld\n", msg_count_, end_time.tv_sec, end_time.tv_nsec);
+    fclose(fp);
 }
 
 void topic_callback(const std_msgs::String::ConstPtr& msg, int topic_idx)
