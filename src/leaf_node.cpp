@@ -89,6 +89,13 @@ void subscriber_init(ros::NodeHandle nh){
   }
 }
 
+void reset_file(){
+    std::string pack_path = ros::package::getPath("ros_workload_generator");
+    std::string file_name = pack_path + "/leaf_node.res";
+    FILE *fp = fopen(file_name.c_str(), "w");
+    fclose(fp);
+}
+
 int main(int argc, char **argv){
     ros::init(argc, argv, "leaf_node");
 
@@ -98,6 +105,8 @@ int main(int argc, char **argv){
     subscriber_init(nh);
 
     ros::Rate loop_rate(1000 / period_);
+
+    reset_file();
 
     while (ros::ok()){
         default_waste_time();

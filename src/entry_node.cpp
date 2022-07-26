@@ -72,6 +72,13 @@ void default_waste_time(){
     publish_topic_count_++;
 }
 
+void reset_file(){
+    std::string pack_path = ros::package::getPath("ros_workload_generator");
+    std::string file_name = pack_path + "/entry_node.res";
+    FILE *fp = fopen(file_name.c_str(), "w");
+    fclose(fp);
+}
+
 int main(int argc, char **argv){
     ros::init(argc, argv, "entry_node");
     ros::NodeHandle nh;
@@ -80,6 +87,8 @@ int main(int argc, char **argv){
     publisher_init(nh);
 
     ros::Rate loop_rate(1000 / period_);
+
+    reset_file();
 
     publish_topic_count_ = 0;
     while (ros::ok()){
