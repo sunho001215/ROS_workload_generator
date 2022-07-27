@@ -2,6 +2,7 @@
 #include "std_msgs/String.h"
 #include "ros/this_node.h"
 #include <ros/package.h>
+#include <pthread.h>
 
 #include <sstream>
 #include <vector>
@@ -36,7 +37,7 @@ void publisher_init(ros::NodeHandle nh){
 
     for(int i=0; i<child_num_; i++){
         std::string topic_name = "topic_" + node_name.substr(1) + "_node" + std::to_string(child_idx_.at(i));
-        ros::Publisher pub = nh.advertise<std_msgs::String>(topic_name, 10);
+        ros::Publisher pub = nh.advertise<std_msgs::String>(topic_name, 1);
         publisher_list_.push_back(pub);
     }
 }
@@ -81,6 +82,7 @@ void reset_file(){
 
 int main(int argc, char **argv){
     ros::init(argc, argv, "entry_node");
+    
     ros::NodeHandle nh;
 
     parameter_init(nh);

@@ -2,6 +2,7 @@
 #include "std_msgs/String.h"
 #include "ros/this_node.h"
 #include <ros/package.h>
+#include <pthread.h>
 
 #include <sstream>
 #include <vector>
@@ -48,7 +49,7 @@ void publisher_init(ros::NodeHandle nh){
 
     for(int i=0; i<child_num_; i++){
         std::string topic_name = "topic_" + node_name.substr(1) + "_node" + std::to_string(child_idx_.at(i));
-        ros::Publisher pub = nh.advertise<std_msgs::String>(topic_name, 10);
+        ros::Publisher pub = nh.advertise<std_msgs::String>(topic_name, 1);
         publisher_list_.push_back(pub);
     }
 }
@@ -100,7 +101,7 @@ void subscriber_init(ros::NodeHandle nh){
   for(int i=0; i<parent_num_; i++){
       std::string topic_name = "topic_node" + std::to_string(parent_idx_.at(i)) + "_" + node_name.substr(1);
 
-      ros::Subscriber sub = nh.subscribe<std_msgs::String>(topic_name, 10, boost::bind(topic_callback, _1, i));
+      ros::Subscriber sub = nh.subscribe<std_msgs::String>(topic_name, 1, boost::bind(topic_callback, _1, i));
 
       subscriber_list_.push_back(sub);
   }
@@ -108,7 +109,7 @@ void subscriber_init(ros::NodeHandle nh){
 
 int main(int argc, char **argv){
     ros::init(argc, argv ,"middle_node");
-
+    
     ros::NodeHandle nh;
 
     parameter_init(nh);
