@@ -18,3 +18,16 @@ target_link_libraries(middle_node ${catkin_LIBRARIES})
 
 add_executable(leaf_node src/leaf_node.cpp)
 target_link_libraries(leaf_node ${catkin_LIBRARIES})
+
+## Nodes for Simple Chain
+add_executable(node2 src/node2.cpp)
+target_link_libraries(node2 ${catkin_LIBRARIES})
+
+add_executable(node3 src/node3.cpp)
+target_link_libraries(node3 ${catkin_LIBRARIES})
+
+add_executable(node4 src/node4.cpp)
+target_link_libraries(node4 ${catkin_LIBRARIES})
+
+add_executable(node5 src/node5.cpp)
+target_link_libraries(node5 ${catkin_LIBRARIES})
