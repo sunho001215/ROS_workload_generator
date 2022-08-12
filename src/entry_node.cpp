@@ -38,7 +38,7 @@ void publisher_init(ros::NodeHandle nh){
 
     for(int i=0; i<child_num_; i++){
         std::string topic_name = "topic_" + node_name.substr(1) + "_node" + std::to_string(child_idx_.at(i));
-        ros::Publisher pub = nh.advertise<std_msgs::String>(topic_name, 1);
+        ros::Publisher pub = nh.advertise<std_msgs::String>(topic_name, 10);
         publisher_list_.push_back(pub);
     }
 }

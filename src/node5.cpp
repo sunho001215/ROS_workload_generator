@@ -54,7 +54,7 @@ void publisher_init(ros::NodeHandle nh)
     for (int i = 0; i < child_num_; i++)
     {
         std::string topic_name = "topic_" + node_name.substr(1) + "_node" + std::to_string(child_idx_.at(i));
-        ros::Publisher pub = nh.advertise<std_msgs::String>(topic_name, 1);
+        ros::Publisher pub = nh.advertise<std_msgs::String>(topic_name, 10);
         publisher_list_.push_back(pub);
     }
 }
@@ -99,7 +99,7 @@ void callback_waste_time()
     clock_gettime(CLOCK_MONOTONIC, &end_time);
 
     std::string pack_path = ros::package::getPath("ros_workload_generator");
-    std::string file_name = pack_path + "/csv/node3.csv";
+    std::string file_name = pack_path + "/csv/node5.csv";
 
     FILE *fp = fopen(file_name.c_str(), "a");
     fprintf(fp, "%d,%d,%ld.%.9ld,%ld.%.9ld,%d,%d\n", iter_, pid_, start_time.tv_sec, start_time.tv_nsec, end_time.tv_sec, end_time.tv_nsec, msg_count_, 1);
@@ -130,7 +130,7 @@ void subscriber_init(ros::NodeHandle nh)
     {
         std::string topic_name = "topic_node" + std::to_string(parent_idx_.at(i)) + "_" + node_name.substr(1);
 
-        ros::Subscriber sub = nh.subscribe<std_msgs::String>(topic_name, 1, boost::bind(topic_callback, _1, i));
+        ros::Subscriber sub = nh.subscribe<std_msgs::String>(topic_name, 10, boost::bind(topic_callback, _1, i));
 
         subscriber_list_.push_back(sub);
     }
@@ -139,7 +139,7 @@ void subscriber_init(ros::NodeHandle nh)
 void reset_file()
 {
     std::string pack_path = ros::package::getPath("ros_workload_generator");
-    std::string file_name = pack_path + "/csv/node3.csv";
+    std::string file_name = pack_path + "/csv/node5.csv";
     FILE *fp = fopen(file_name.c_str(), "w");
     fprintf(fp, "iter,PID,start,end,instance,activation\n");
     fclose(fp);
@@ -147,7 +147,7 @@ void reset_file()
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "node3");
+    ros::init(argc, argv, "node5");
 
     ros::NodeHandle nh;
 
