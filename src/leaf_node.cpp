@@ -3,6 +3,7 @@
 #include "ros/this_node.h"
 #include <ros/package.h>
 #include <pthread.h>
+#include <unistd.h>
 
 #include <sstream>
 #include <vector>
@@ -13,7 +14,7 @@
 #define MAGIC_NUMBER 497000
 
 static int child_num_, parent_num_;
-static int msg_count_;
+static int msg_count_, iter_ = 0, pid_;
 static float callback_waste_time_ = 1000.0;
 static float default_waste_time_ = 1000.0;
 static float period_ = 100.0;
@@ -46,22 +47,26 @@ void default_waste_time(){
     for(long long int i = 0; i < MAGIC_NUMBER * default_waste_time_; i++){
         tmp = 1 - tmp;
     }
+
+    iter_++;
 }
 
 void callback_waste_time(){
+    struct timespec start_time, end_time;
+    clock_gettime(CLOCK_MONOTONIC, &start_time);
+
     float tmp = 3.323;
     for(long long int i = 0; i < MAGIC_NUMBER * callback_waste_time_; i++){
         tmp = 1 - tmp;
     }
 
-    struct timespec end_time;
     clock_gettime(CLOCK_MONOTONIC, &end_time);
 
     std::string pack_path = ros::package::getPath("ros_workload_generator");
-    std::string file_name = pack_path + "/leaf_node.res";
+    std::string file_name = pack_path + "/csv/leaf_node.csv";
     
     FILE *fp = fopen(file_name.c_str(), "a");
-    fprintf(fp, "%d %ld.%.9ld\n", msg_count_, end_time.tv_sec, end_time.tv_nsec);
+    fprintf(fp, "%d,%d,%ld.%.9ld,%ld.%.9ld,%d,%d\n", iter_, pid_, start_time.tv_sec, start_time.tv_nsec, end_time.tv_sec, end_time.tv_nsec, msg_count_, 1);
     fclose(fp);
 }
 
@@ -93,8 +98,9 @@ void subscriber_init(ros::NodeHandle nh){
 
 void reset_file(){
     std::string pack_path = ros::package::getPath("ros_workload_generator");
-    std::string file_name = pack_path + "/leaf_node.res";
+    std::string file_name = pack_path + "/csv/leaf_node.csv";
     FILE *fp = fopen(file_name.c_str(), "w");
+    fprintf(fp, "iter,PID,start,end,instance,activation\n");
     fclose(fp);
 }
 
@@ -110,9 +116,11 @@ int main(int argc, char **argv){
 
     reset_file();
 
+    iter_ = 0;
+    pid_ = getpid();
     while (ros::ok()){
-        default_waste_time();
         ros::spinOnce();
+        default_waste_time();
         loop_rate.sleep();
     }
 

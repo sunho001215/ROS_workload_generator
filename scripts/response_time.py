@@ -7,10 +7,11 @@ def read_file(entry_file_path, leaf_file_path):
 
     with open(entry_file_path, 'r') as f:
         line = f.readline()
+        line = f.readline()
         while line:
-            start_idx, start_time = line.split()
-            start_idx = int(start_idx)
-            start_time = float(start_time)
+            line_split = line.split(",")
+            start_idx = int(line_split[4])
+            start_time = float(line_split[2])
             
             start_idx_list.append(start_idx)
             start_time_list.append(start_time)
@@ -19,10 +20,11 @@ def read_file(entry_file_path, leaf_file_path):
 
     with open(leaf_file_path, 'r') as f:
         line = f.readline()
+        line = f.readline()
         while line:
-            end_idx, end_time = line.split()
-            end_idx = int(end_idx)
-            end_time = float(end_time)
+            line_split = line.split(",")
+            end_idx = int(line_split[4])
+            end_time = float(line_split[3])
             
             end_idx_list.append(end_idx)
             end_time_list.append(end_time)
@@ -84,8 +86,8 @@ if __name__ == "__main__":
     rospack = rospkg.RosPack()
     pkg_path = rospack.get_path("ros_workload_generator")
 
-    entry_file_path = pkg_path + "/entry_node.res"
-    leaf_file_path = pkg_path + "/leaf_node.res"
+    entry_file_path = pkg_path + "/csv/entry_node.csv"
+    leaf_file_path = pkg_path + "/csv/leaf_node.csv"
     png_path = pkg_path + "/response_time.png"
 
     start_idx_list, end_idx_list, start_time_list, end_time_list = read_file(entry_file_path, leaf_file_path)
@@ -97,7 +99,7 @@ if __name__ == "__main__":
     print(get_var_response_time(response_time_list))
     
     # print(data)
-    plt.ylim(0,get_max_response_time(response_time_list) + 0.1)
+    plt.ylim(0,0.9)
     plt.xlim(0,len(response_time_list)-1)
 
     # plt.axhline(y=400, color='r', linewidth=1, label='Deadline: 400ms')

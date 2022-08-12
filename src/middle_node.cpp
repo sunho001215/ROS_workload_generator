@@ -119,8 +119,8 @@ int main(int argc, char **argv){
     ros::Rate loop_rate(1000 / period_);
 
     while (ros::ok()){
-        default_waste_time();
         ros::spinOnce();
+        default_waste_time();
         loop_rate.sleep();
     }
 

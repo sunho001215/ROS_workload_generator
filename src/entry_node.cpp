@@ -3,6 +3,7 @@
 #include "ros/this_node.h"
 #include <ros/package.h>
 #include <pthread.h>
+#include <unistd.h>
 
 #include <sstream>
 #include <vector>
@@ -14,7 +15,7 @@
 static int child_num_;
 static float default_waste_time_ = 1000.0;
 static float period_ = 100.0;
-static int publish_topic_count_ = 0;
+static int publish_topic_count_ = 0, iter_ = 0, pid_;
 
 static std::vector<int> child_idx_;
 static std::vector<ros::Publisher> publisher_list_;
@@ -54,15 +55,8 @@ void publish_message(){
 }
 
 void default_waste_time(){
-    struct timespec start_time;
+    struct timespec start_time, end_time;
     clock_gettime(CLOCK_MONOTONIC, &start_time);
-
-    std::string pack_path = ros::package::getPath("ros_workload_generator");
-    std::string file_name = pack_path + "/entry_node.res";
-    
-    FILE *fp = fopen(file_name.c_str(), "a");
-    fprintf(fp, "%d %ld.%.9ld\n", publish_topic_count_, start_time.tv_sec, start_time.tv_nsec);
-    fclose(fp);
 
     float tmp = 3.323;
     for(long long int i = 0; i < MAGIC_NUMBER * default_waste_time_; i++){
@@ -70,13 +64,25 @@ void default_waste_time(){
     }
 
     publish_message();
+
+    clock_gettime(CLOCK_MONOTONIC, &end_time);
+
+    std::string pack_path = ros::package::getPath("ros_workload_generator");
+    std::string file_name = pack_path + "/csv/entry_node.csv";
+    
+    FILE *fp = fopen(file_name.c_str(), "a");
+    fprintf(fp, "%d,%d,%ld.%.9ld,%ld.%.9ld,%d,%d\n", iter_, pid_, start_time.tv_sec, start_time.tv_nsec, end_time.tv_sec, end_time.tv_nsec, publish_topic_count_, 1);
+    fclose(fp);
+
     publish_topic_count_++;
+    iter_++;
 }
 
 void reset_file(){
     std::string pack_path = ros::package::getPath("ros_workload_generator");
-    std::string file_name = pack_path + "/entry_node.res";
+    std::string file_name = pack_path + "/csv/entry_node.csv";
     FILE *fp = fopen(file_name.c_str(), "w");
+    fprintf(fp, "iter,PID,start,end,instance,activation\n");
     fclose(fp);
 }
 
@@ -93,9 +99,11 @@ int main(int argc, char **argv){
     reset_file();
 
     publish_topic_count_ = 0;
+    iter_ = 0;
+    pid_ = getpid();
     while (ros::ok()){
-        default_waste_time();
         ros::spinOnce();
+        default_waste_time();
         loop_rate.sleep();
     }
 

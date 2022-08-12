@@ -10,7 +10,7 @@
         <rosparam param="child_idx">[3]</rosparam>
         <param name="default_waste_time" value="1" />
         <param name="callback_waste_time" value="40" />
-        <param name="period" value="100" />
+        <param name="period" value="50" />
     </node>
 
     <node pkg="ros_workload_generator" type="node3" name="node3" output="screen">
@@ -18,7 +18,7 @@
         <rosparam param="child_idx">[4]</rosparam>
         <param name="default_waste_time" value="1" />
         <param name="callback_waste_time" value="10" />
-        <param name="period" value="100" />
+        <param name="period" value="50" />
     </node>
 
     <node pkg="ros_workload_generator" type="node4" name="node4" output="screen">
@@ -26,7 +26,7 @@
         <rosparam param="child_idx">[5]</rosparam>
         <param name="default_waste_time" value="1" />
         <param name="callback_waste_time" value="20" />
-        <param name="period" value="100" />
+        <param name="period" value="50" />
     </node>
 
     <node pkg="ros_workload_generator" type="node5" name="node5" output="screen">
@@ -34,13 +34,13 @@
         <rosparam param="child_idx">[6]</rosparam>
         <param name="default_waste_time" value="1" />
         <param name="callback_waste_time" value="10" />
-        <param name="period" value="100" />
+        <param name="period" value="50" />
     </node>
 
     <node pkg="ros_workload_generator" type="leaf_node" name="node6" output="screen">
         <rosparam param="parent_idx">[5]</rosparam>
         <param name="default_waste_time" value="1" />
         <param name="callback_waste_time" value="10" />
-        <param name="period" value="100" />
+        <param name="period" value="50" />
     </node>
 </launch>
